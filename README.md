@@ -1,4 +1,4 @@
-D7012E-Lab1
+D7012E-Lab2
 ===========
 
 [Laboration 2](http://cs.lth.se/english/course/edan40_functional_programming/programming_assignments/functional_parsing/) : Functional Parsing
