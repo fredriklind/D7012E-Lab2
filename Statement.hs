@@ -41,8 +41,14 @@ exec (If cond thenStmts elseStmts: stmts) dict input =
     then exec (thenStmts: stmts) dict input
     else exec (elseStmts: stmts) dict input
 
-exec (Begin stmt:[]) dict input = []
+exec (Begin stmt:[]) dict input = exec stmt dict input
 exec (Begin stmt:stmts) dict input = exec stmts dict input
+
+exec (While cond (Begin stmts)) dict input =
+	if (Expr.value cond dict)>0
+	then exec stmts dict input
+
+exec (Read e) dict input = 
 
 instance Parse Statement where
   parse = skip ! assignment ! ifStmt ! begin ! while ! readStmt ! writeStmt
