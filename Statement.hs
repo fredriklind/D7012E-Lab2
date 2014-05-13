@@ -41,8 +41,8 @@ exec (If cond thenStmts elseStmts: stmts) dict input =
     then exec (thenStmts: stmts) dict input
     else exec (elseStmts: stmts) dict input
 
-exec (Begin stmt:[]) dict input = exec stmt dict input
-exec (Begin stmt:stmts) dict input = exec stmts dict input
+exec [] _ _ = []
+exec (Begin stmt:stmts) dict input = exec (stmt++stmts) dict input
 
 exec (While cond stmt: stmts) dict input = 
       if (Expr.value cond dict)>0
@@ -58,4 +58,10 @@ exec (Skip:stmts) dict input = exec stmts dict input
 
 instance Parse Statement where
   parse = skip ! assignment ! ifStmt ! begin ! while ! readStmt ! writeStmt
-  toString = error "Statement.toString not implemented"
+  toString (Assignment str expr) = str ++ " := " ++ (Expr.toString expr) ++ "\n"
+  toString (Skip) = "skip;\n"
+  toString (If expr s1 s2) = "if " ++ (Expr.toString expr) ++ " then\n\t" ++ toString s1 ++ "else\n" ++ toString s2
+  toString (Begin stmts) = "begin\n" ++ concat (map toString stmts) ++ "end;\n" 
+  toString (While cond stmt) = "while " ++ (Expr.toString cond) ++ " do\n" ++ toString stmt 
+  toString (Read str) = "read " ++ str ++ "\n"
+  toString (Write expr) = "write " ++ (Expr.toString expr) ++ "\n" 
