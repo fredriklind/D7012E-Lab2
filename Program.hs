@@ -3,10 +3,9 @@ import Parser hiding (T)
 import qualified Statement
 import qualified Dictionary
 import Prelude hiding (return, fail)
-newtype T = Program () -- to be defined
+newtype T = Program ([Statement.T]) deriving Show
 instance Parse T where
-  parse = error "Program.parse not implemented"
-  
+  parse = iter Statement.parse >-> Program  
   toString = error "Program.toString not implemented"
              
-exec = error "Program.exec not implemented"
+exec (Program p) input = Statement.exec p (Dictionary.empty) input
